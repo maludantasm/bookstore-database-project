@@ -1,58 +1,51 @@
 CREATE TABLE Cliente (
     CPF VARCHAR(11),
     Nome VARCHAR(32) NOT NULL,
-    Email UNIQUE NOT NULL,
-    EndRua VARCHAR(256),
-    EndNumero NUMBER,
-    EndBairro VARCHAR(32),
-    EndEstado CHAR(2),
-    CEP CHAR(8),
-    DDD1 CHAR(2),
-    DD2 CHAR(2),
-    Telefone1 NUMBER(9),
-    Telefone2 NUMBER(9),
-    CONSTRAINT PK_Clientes PRIMARY KEY (CPF),
+    Email VARCHAR(256) UNIQUE NOT NULL,
+    Logradouro VARCHAR(256) NOT NULL,
+    Cidade VARCHAR(32) NOT NULL,
+    Bairro VARCHAR(32) NOT NULL,
+    UF CHAR(2) NOT NULL,
+    CEP CHAR(8) NOT NULL,
+    ContatoTelefone CHAR(10),
+    ContatoCelular CHAR(11) NOT NULL,
+    CONSTRAINT PK_Clientes PRIMARY KEY (CPF)
 );
 
 CREATE TABLE Funcionario (
     CPF VARCHAR(11),
     Nome VARCHAR(32) NOT NULL,
-    Email UNIQUE NOT NULL,
-    EndRua VARCHAR(256),
-    EndNumero NUMBER,
-    EndBairro VARCHAR(32),
-    EndEstado CHAR(2),
-    CEP CHAR(8),
-    DDD1 CHAR(2),
-    DD2 CHAR(2),
-    Telefone1 NUMBER(9),
-    Telefone2 NUMBER(9),
-    Salario NUMBER(6,2),
-    Admissao DATE,
-    CONSTRAINT PK_Clientes PRIMARY KEY (CPF),
+    Email VARCHAR(256) UNIQUE NOT NULL,
+    Logradouro VARCHAR(256) NOT NULL,
+    Cidade VARCHAR(32) NOT NULL,
+    Bairro VARCHAR(32) NOT NULL,
+    UF CHAR(2) NOT NULL,
+    CEP CHAR(8) NOT NULL,
+    ContatoTelefone CHAR(10),
+    ContatoCelular CHAR(11) NOT NULL,
+    Admissao DATE NOT NULL,
+    Salario NUMBER NOT NULL,
+    SupervisorCPF VARCHAR(11),
+    SerialEquipamento VARCHAR(32) UNIQUE,
+    CONSTRAINT PK_Funcionarios PRIMARY KEY (CPF),
+    CONSTRAINT FK_Supervisor FOREIGN KEY (SupervisorCPF)
+        REFERENCES Funcionario (CPF)
 );
 
-CREATE TABLE Envio (
-    Codigo NUMBER(12),
-    Situacao NUMBER(1) DEFAULT 1,
-    Frete NUMBER(6,2),
-    CPF VARCHAR(11),
-    Numero NUMBER,
-    CONSTRAINT PK_Envios PRIMARY KEY (Codigo),
-    CONSTRAINT FK_Clientes FOREIGN KEY (Cliente)
-        REFERENCES Cliente (CPF),
-    CONSTRAINT FK_Compras FOREIGN KEY (Numero)
-        REFERENCES Compra (Numero),
+CREATE TABLE Categoria (
+    Id NUMBER,
+    Nome VARCHAR(32) NOT NULL,
+    CONSTRAINT PK_Categorias PRIMARY KEY (Id)
 );
 
 CREATE TABLE Livro (
-    ISBN NUMBER(13),
+    ISBN VARCHAR(17),
     Titulo VARCHAR(256) NOT NULL,
-    Descricao VARCHAR(256),
-    Categoria VARCHAR(32),
     Ano NUMBER(4),
-    Preco NUMBER(6,2) NOT NULL,
-    CONSTRAINT PK_Livros PRIMARY KEY (ISBN)
+    CategoriaId NUMBER,
+    CONSTRAINT PK_Livros PRIMARY KEY (ISBN),
+    CONSTRAINT FK_CategoriaLivro FOREIGN KEY (CategoriaId)
+        REFERENCES Categoria (Id)
 );
 
 CREATE TABLE Autor (
@@ -68,49 +61,63 @@ CREATE TABLE Editora (
     CONSTRAINT PK_Editoras PRIMARY KEY (Id)
 );
 
-CREATE TABLE Avaliacao (
+CREATE TABLE EmbalagemPresente (
+    Id NUMBER,
+    Tipo NUMBER NOT NULL,
+    Valor NUMBER NOT NULL,
+    CONSTRAINT PK_EmbalagemPresente PRIMARY KEY (Id)
+);
+
+CREATE TABLE Pedido (
     CPF VARCHAR(11),
-    ISBN VARCHAR(13),
-    Score NUMBER(1) NOT NULL DEFAULT 1,
-    CONSTRAINT PK_Avaliacoes PRIMARY KEY (CPF, ISBN),
+    Horario TIMESTAMP,
+    CONSTRAINT PK_Pedidos PRIMARY KEY (CPF, Horario),
     CONSTRAINT FK_Clientes FOREIGN KEY (CPF)
-        REFERENCES Cliente (CPF),
-    CONSTRAINT FK_Livros FOREIGN KEY (ISBN)
-        REFERENCES Livro (ISBN),
+        REFERENCES Cliente (CPF)
 );
 
 CREATE TABLE Compra (
     CPF VARCHAR(11),
-    ISBN NUMBER(13),
-    Numero NUMBER NOT NULL,
-    Situacao NUMBER(1),
-    DataCompra DATA NOT NULL,
-    CONSTRAINT PK_Avaliacoes PRIMARY KEY (CPF, ISBN),
-    CONSTRAINT FK_Clientes FOREIGN KEY (CPF)
-        REFERENCES Cliente (CPF),
-    CONSTRAINT FK_Livros FOREIGN KEY (ISBN)
+    ISBN VARCHAR(17),
+    Horario TIMESTAMP,
+    Quantidade NUMBER NOT NULL,
+    EmbalagemPresenteId NUMBER,
+    CONSTRAINT PK_Compras PRIMARY KEY (CPF, ISBN, Horario),
+    CONSTRAINT FK_CompraPedidos FOREIGN KEY (CPF, Horario)
+        REFERENCES Pedido (CPF, Horario),
+    CONSTRAINT FK_CompraLivros FOREIGN KEY (ISBN)
         REFERENCES Livro (ISBN),
+    CONSTRAINT FK_PedidoEmbalagemPresente FOREIGN KEY (EmbalagemPresenteId)
+        REFERENCES EmbalagemPresente (Id)
 );
 
 CREATE TABLE Cataloga (
-    CPF VARCHAR(11),
-    ISBN NUMBER(13),
-    Id NUMBER,
-    CONSTRAINT PK_Avaliacoes PRIMARY KEY (CPF, ISBN, Id),
-    CONSTRAINT FK_Livros FOREIGN KEY (ISBN)
+    ISBN VARCHAR(17),
+    AutorId NUMBER,
+    EditoraId NUMBER,
+    Preco NUMBER NOT NULL,
+    Unidades NUMBER NOT NULL,
+    CONSTRAINT PK_Catalogo PRIMARY KEY (ISBN, AutorId, EditoraId),
+    CONSTRAINT FK_CatalogoLivros FOREIGN KEY (ISBN)
         REFERENCES Livro (ISBN),
-    CONSTRAINT FK_Autores FOREIGN KEY (Id)
+    CONSTRAINT FK_CatalogoAutores FOREIGN KEY (AutorId)
         REFERENCES Autor (Id),
-    CONSTRAINT FK_Editoras FOREIGN KEY (CPF)
-        REFERENCES Editora (Id),
+    CONSTRAINT FK_CatalogoEditoras FOREIGN KEY (EditoraId)
+        REFERENCES Editora (Id)
 );
 
-CREATE TABLE Supervisiona (
-    CPF_1 VARCHAR(11),
-    CPF_2 VARCHAR(11),
-    CONSTRAINT PK_Supervisores PRIMARY KEY (CPF_1),
-    CONSTRAINT FK_Funcionarios FOREIGN KEY (CPF_1)
-        REFERENCES Funcionario (CPF),
-    CONSTRAINT FK_Funcionarios FOREIGN KEY (CPF_2)
-        REFERENCES Funcionario (CPF),
-);
+CREATE SEQUENCE Categoria_Seq
+START WITH 1
+INCREMENT BY 1;
+
+CREATE SEQUENCE Autor_Seq
+START WITH 1
+INCREMENT BY 1;
+
+CREATE SEQUENCE Editora_Seq
+START WITH 1
+INCREMENT BY 1;
+
+CREATE SEQUENCE EmbalagemPresente_Seq
+START WITH 1
+INCREMENT BY 1;
