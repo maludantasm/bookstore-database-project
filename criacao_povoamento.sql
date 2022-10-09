@@ -32,16 +32,16 @@ CREATE TABLE Funcionario (
         REFERENCES Funcionario (CPF)
 );
 
-CREATE TABLE Departamento (
+CREATE TABLE Armazem (
     Id NUMBER,
     Nome VARCHAR(32) NOT NULL UNIQUE,
-    CONSTRAINT PK_Departamentos PRIMARY KEY (Id)
+    CONSTRAINT PK_Armazems PRIMARY KEY (Id)
 );
 
-CREATE TABLE Filial (
+CREATE TABLE Secao (
     Id NUMBER,
     Nome VARCHAR(32) NOT NULL UNIQUE,
-    CONSTRAINT PK_Filial PRIMARY KEY (Id)
+    CONSTRAINT PK_Secao PRIMARY KEY (Id)
 );
 
 CREATE TABLE Categoria (
@@ -92,15 +92,15 @@ CREATE TABLE Compra (
 
 CREATE TABLE Trabalha (
     CPF VARCHAR(11),
-    DeptoId NUMBER NOT NULL,
-    FilialId NUMBER NOT NULL,
-    CONSTRAINT PK_Trabalha PRIMARY KEY (CPF),
-    CONSTRAINT FK_TrabalhaDepartamento FOREIGN KEY (DeptoId)
-        REFERENCES Departamento (Id),
-    CONSTRAINT FK_TrabalhaFilial FOREIGN KEY (FilialId)
-        REFERENCES Filial (Id),
+    SecaoId NUMBER NOT NULL,
+    ArmazemId NUMBER NOT NULL,
+    CONSTRAINT PK_Trabalha PRIMARY KEY (CPF, SecaoId),
     CONSTRAINT FK_TrabalhaFuncionario FOREIGN KEY (CPF)
         REFERENCES Funcionario (CPF)
+    CONSTRAINT FK_TrabalhaSecao FOREIGN KEY (SecaoId)
+        REFERENCES Secao (Id),
+    CONSTRAINT FK_TrabalhaArmazem FOREIGN KEY (ArmazemId)
+        REFERENCES Armazem (Id),
 );
 
 CREATE SEQUENCE Categoria_Seq
@@ -111,11 +111,11 @@ CREATE SEQUENCE EmbalagemPresente_Seq
 START WITH 1
 INCREMENT BY 1;
 
-CREATE SEQUENCE Depto_Seq
+CREATE SEQUENCE Armazem_Seq
 START WITH 1
 INCREMENT BY 1;
 
-CREATE SEQUENCE Filial_Seq
+CREATE SEQUENCE Secao_Seq
 START WITH 1
 INCREMENT BY 1;
 
@@ -140,13 +140,13 @@ INSERT INTO Funcionario VALUES ('77391195049', 'Davi Lucca Barbosa', 'davilucca@
 INSERT INTO Funcionario VALUES ('82156117020', 'Ana Clara dos Santos', 'anaclara@example.com', 'Rua Boa Volta, n. 213', 'Boa Viagem', 'Vila Holanda', 'PE', '59170720', NULL, '81988923456', TO_DATE('16/02/2022', 'DD/MM/YYYY'), 2812.00, NULL, NULL);
 INSERT INTO Funcionario VALUES ('58674398014', 'Nicole Caldeira', 'nicolecaldeira@example.com', 'Rua da Videira, n. 430', 'Recife', 'Cordeiro', 'PE', '57045107', NULL, '81988133456', TO_DATE('16/02/2022', 'DD/MM/YYYY'), 2812.00, NULL, NULL);
 
-INSERT INTO Departamento VALUES (Depto_Seq.NextVal, 'TI');
-INSERT INTO Departamento VALUES (Depto_Seq.NextVal, 'Almoxarifado');
-INSERT INTO Departamento VALUES (Depto_Seq.NextVal, 'RH');
+INSERT INTO Armazem VALUES (Armazem_Seq.NextVal, 'Vila dos Pombos');
+INSERT INTO Armazem VALUES (Armazem_Seq.NextVal, 'Vila Holanda');
+INSERT INTO Armazem VALUES (Armazem_Seq.NextVal, 'Vila Prudente');
 
-INSERT INTO Filial VALUES (Filial_Seq.NextVal, 'A');
-INSERT INTO Filial VALUES (Filial_Seq.NextVal, 'B');
-INSERT INTO Filial VALUES (Filial_Seq.NextVal, 'C');
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'A');
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'B');
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'C');
 
 INSERT INTO EmbalagemPresente VALUES (EmbalagemPresente_Seq.NextVal, 1, 50.00);
 INSERT INTO EmbalagemPresente VALUES (EmbalagemPresente_Seq.NextVal, 2, 25.00);
@@ -166,19 +166,15 @@ INSERT INTO Livro VALUES ('978-85-564-8400-5', 'C# para programadores Java', 201
 INSERT INTO Livro VALUES ('978-85-897-9400-3', 'Matemática Discreta: Uma abordagem simplificada', 2021, 2);
 
 INSERT INTO Trabalha VALUES ('94161558023', 1, 1);
-INSERT INTO Trabalha VALUES ('08953368049', 1, 1);
-INSERT INTO Trabalha VALUES ('06605717066', 1, 1);
+INSERT INTO Trabalha VALUES ('08953368049', 1, 2);
+INSERT INTO Trabalha VALUES ('06605717066', 1, 3);
 INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
 INSERT INTO Trabalha VALUES ('77391195049', 1, 2);
-
--- INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
--- INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
--- INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
--- INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
-
--- INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
--- INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
--- INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
+INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
+INSERT INTO Trabalha VALUES ('82156117020', 2, 1);
+INSERT INTO Trabalha VALUES ('82156117020', 3, 1);
+INSERT INTO Trabalha VALUES ('06605717066', 2, 3);
+INSERT INTO Trabalha VALUES ('06605717066', 1, 2);
 
 INSERT INTO Pedido VALUES ('20981209076', TO_TIMESTAMP('2022-07-02 16:14:23', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Pedido VALUES ('64984467061', TO_TIMESTAMP('2022-07-02 16:14:23', 'YYYY-MM-DD HH24:MI:SS'));
