@@ -32,6 +32,18 @@ CREATE TABLE Funcionario (
         REFERENCES Funcionario (CPF)
 );
 
+CREATE TABLE Armazem (
+    Id NUMBER,
+    Nome VARCHAR(32) NOT NULL UNIQUE,
+    CONSTRAINT PK_Armazems PRIMARY KEY (Id)
+);
+
+CREATE TABLE Secao (
+    Id NUMBER,
+    Nome VARCHAR(32) NOT NULL UNIQUE,
+    CONSTRAINT PK_Secao PRIMARY KEY (Id)
+);
+
 CREATE TABLE Categoria (
     Id NUMBER,
     Nome VARCHAR(32) NOT NULL,
@@ -46,19 +58,6 @@ CREATE TABLE Livro (
     CONSTRAINT PK_Livros PRIMARY KEY (ISBN),
     CONSTRAINT FK_CategoriaLivro FOREIGN KEY (CategoriaId)
         REFERENCES Categoria (Id)
-);
-
-CREATE TABLE Autor (
-    Id NUMBER,
-    Nome VARCHAR(32) NOT NULL,
-    Biografia VARCHAR(256),
-    CONSTRAINT PK_Autores PRIMARY KEY (Id)
-);
-
-CREATE TABLE Editora (
-    Id NUMBER,
-    Nome VARCHAR(32) NOT NULL,
-    CONSTRAINT PK_Editoras PRIMARY KEY (Id)
 );
 
 CREATE TABLE EmbalagemPresente (
@@ -91,19 +90,17 @@ CREATE TABLE Compra (
         REFERENCES EmbalagemPresente (Id)
 );
 
-CREATE TABLE Cataloga (
-    ISBN VARCHAR(17),
-    AutorId NUMBER,
-    EditoraId NUMBER,
-    Preco NUMBER NOT NULL,
-    Unidades NUMBER NOT NULL,
-    CONSTRAINT PK_Catalogo PRIMARY KEY (ISBN, AutorId, EditoraId),
-    CONSTRAINT FK_CatalogoLivros FOREIGN KEY (ISBN)
-        REFERENCES Livro (ISBN),
-    CONSTRAINT FK_CatalogoAutores FOREIGN KEY (AutorId)
-        REFERENCES Autor (Id),
-    CONSTRAINT FK_CatalogoEditoras FOREIGN KEY (EditoraId)
-        REFERENCES Editora (Id)
+CREATE TABLE Trabalha (
+    CPF VARCHAR(11),
+    SecaoId NUMBER NOT NULL,
+    ArmazemId NUMBER NOT NULL,
+    CONSTRAINT PK_Trabalha PRIMARY KEY (CPF, SecaoId),
+    CONSTRAINT FK_TrabalhaFuncionario FOREIGN KEY (CPF)
+        REFERENCES Funcionario (CPF)
+    CONSTRAINT FK_TrabalhaSecao FOREIGN KEY (SecaoId)
+        REFERENCES Secao (Id),
+    CONSTRAINT FK_TrabalhaArmazem FOREIGN KEY (ArmazemId)
+        REFERENCES Armazem (Id),
 );
 
 CREATE SEQUENCE Categoria_Seq
@@ -113,6 +110,15 @@ INCREMENT BY 1;
 CREATE SEQUENCE EmbalagemPresente_Seq
 START WITH 1
 INCREMENT BY 1;
+
+CREATE SEQUENCE Armazem_Seq
+START WITH 1
+INCREMENT BY 1;
+
+CREATE SEQUENCE Secao_Seq
+START WITH 1
+INCREMENT BY 1;
+
 
 INSERT INTO Cliente VALUES ('20981209076', 'Carolina Ribeiro da Silva', 'carolrs@example.com', 'Rua 21, n. 213', 'Monte Azul', 'Renascença', 'PI', '39400265', NULL, '81999715334');
 INSERT INTO Cliente VALUES ('80773763040', 'João Vitor Silveira', 'joaovs@example.com', 'Rua 713, n. 7', 'Campo Pequeno', 'Colombo', 'PR', '83404700', NULL, '81999717344');
@@ -134,26 +140,20 @@ INSERT INTO Funcionario VALUES ('77391195049', 'Davi Lucca Barbosa', 'davilucca@
 INSERT INTO Funcionario VALUES ('82156117020', 'Ana Clara dos Santos', 'anaclara@example.com', 'Rua Boa Volta, n. 213', 'Boa Viagem', 'Vila Holanda', 'PE', '59170720', NULL, '81988923456', TO_DATE('16/02/2022', 'DD/MM/YYYY'), 2812.00, NULL, NULL);
 INSERT INTO Funcionario VALUES ('58674398014', 'Nicole Caldeira', 'nicolecaldeira@example.com', 'Rua da Videira, n. 430', 'Recife', 'Cordeiro', 'PE', '57045107', NULL, '81988133456', TO_DATE('16/02/2022', 'DD/MM/YYYY'), 2812.00, NULL, NULL);
 
+INSERT INTO Armazem VALUES (Armazem_Seq.NextVal, 'Vila dos Pombos');
+INSERT INTO Armazem VALUES (Armazem_Seq.NextVal, 'Vila Holanda');
+INSERT INTO Armazem VALUES (Armazem_Seq.NextVal, 'Vila Prudente');
+
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'A');
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'B');
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'C');
+
 INSERT INTO EmbalagemPresente VALUES (EmbalagemPresente_Seq.NextVal, 1, 50.00);
 INSERT INTO EmbalagemPresente VALUES (EmbalagemPresente_Seq.NextVal, 2, 25.00);
 INSERT INTO EmbalagemPresente VALUES (EmbalagemPresente_Seq.NextVal, 3, 30.00);
 
 INSERT INTO Categoria VALUES (Categoria_Seq.NextVal, 'Programação');
 INSERT INTO Categoria VALUES (Categoria_Seq.NextVal, 'Matemática');
-
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Sandra Antonella', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Dr. Milena Campos', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Antônio Moura', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Vinicius Castro', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Juliana Silveira', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Elisa Cavalcanti', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Diogo da Rocha', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Enrico Barros', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Marcela Freitas', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Renan Ferreira', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Cauê Caldeira', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Luiz Felipe Ribeiro', NULL);
-INSERT INTO Autor VALUES (Autor_Seq.NextVal, 'Melissa Silva', NULL);
 
 INSERT INTO Livro VALUES ('978-85-123-1400-5', 'Modelagem de Banco de Dados', 2019, 1);
 INSERT INTO Livro VALUES ('978-85-456-2400-6', 'Manual de Referencia do Python', 2022, 1);
@@ -165,30 +165,16 @@ INSERT INTO Livro VALUES ('978-85-231-7400-2', 'Rust para Programadores C++', 20
 INSERT INTO Livro VALUES ('978-85-564-8400-5', 'C# para programadores Java', 2019, 1);
 INSERT INTO Livro VALUES ('978-85-897-9400-3', 'Matemática Discreta: Uma abordagem simplificada', 2021, 2);
 
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Livrosfera');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Editora Mosaico');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'AstroBooks');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Editora Abecês');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Miríade Livros');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Editora Meridiano');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Serafim Livros');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Editora Caravana');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Boaventura');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Editora Livro de Folhas');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Pathfinder Press');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Livros Koala');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Editora Silveira');
-INSERT INTO Editora VALUES (Editora_Seq.NextVal, 'Editora Porto Velho');
-
-INSERT INTO Cataloga VALUES ('978-85-123-1400-5', 1, 6, 230.37, 100);
-INSERT INTO Cataloga VALUES ('978-85-456-2400-6', 2, 5, 137.21, 250);
-INSERT INTO Cataloga VALUES ('978-85-789-3400-7', 3, 3, 310.25, 130);
-INSERT INTO Cataloga VALUES ('978-85-321-4400-8', 4, 7, 113.05, 112);
-INSERT INTO Cataloga VALUES ('978-85-654-5400-9', 1, 3, 89.27, 221);
-INSERT INTO Cataloga VALUES ('978-85-987-6400-4', 2, 8, 91.57, 57);
-INSERT INTO Cataloga VALUES ('978-85-231-7400-2', 3, 3, 152.45, 300);
-INSERT INTO Cataloga VALUES ('978-85-564-8400-5', 3, 1, 121.95, 133);
-INSERT INTO Cataloga VALUES ('978-85-897-9400-3', 1, 2, 67.05, 272);
+INSERT INTO Trabalha VALUES ('94161558023', 1, 1);
+INSERT INTO Trabalha VALUES ('08953368049', 1, 2);
+INSERT INTO Trabalha VALUES ('06605717066', 1, 3);
+INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
+INSERT INTO Trabalha VALUES ('77391195049', 1, 2);
+INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
+INSERT INTO Trabalha VALUES ('82156117020', 2, 1);
+INSERT INTO Trabalha VALUES ('82156117020', 3, 1);
+INSERT INTO Trabalha VALUES ('06605717066', 2, 3);
+INSERT INTO Trabalha VALUES ('06605717066', 1, 2);
 
 INSERT INTO Pedido VALUES ('20981209076', TO_TIMESTAMP('2022-07-02 16:14:23', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Pedido VALUES ('64984467061', TO_TIMESTAMP('2022-07-02 16:14:23', 'YYYY-MM-DD HH24:MI:SS'));

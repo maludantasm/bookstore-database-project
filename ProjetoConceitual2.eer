@@ -45,8 +45,8 @@
     <nodes xmi:type="eer:AssociativeEntity" xmi:id="_KJe0UEPREe2kEIrNgJtMmw" name="Compra" relationshipLink="_JiUNcENfEe21fuXTQ6KFCw">
       <contains xmi:type="eer:Relationship" xmi:id="_QNjL0ENeEe21fuXTQ6KFCw" name="Compra" AttributeLinkSource="_Y8Q9gENgEe21fuXTQ6KFCw" relationshipLink="_QxZfwENeEe21fuXTQ6KFCw _SNuT0ENeEe21fuXTQ6KFCw"/>
     </nodes>
-    <nodes xmi:type="eer:Entity" xmi:id="_mMqwUEgFEe2QI7JbPpdU3w" name="Departamento" relationshipLink="_pA06AEgFEe2QI7JbPpdU3w"/>
-    <nodes xmi:type="eer:Entity" xmi:id="_nE-RUEgFEe2QI7JbPpdU3w" name="Filial" relationshipLink="_qMI2kEgFEe2QI7JbPpdU3w"/>
+    <nodes xmi:type="eer:Entity" xmi:id="_mMqwUEgFEe2QI7JbPpdU3w" name="Armazem" relationshipLink="_pA06AEgFEe2QI7JbPpdU3w"/>
+    <nodes xmi:type="eer:Entity" xmi:id="_nE-RUEgFEe2QI7JbPpdU3w" name="Seção" relationshipLink="_qMI2kEgFEe2QI7JbPpdU3w"/>
     <nodes xmi:type="eer:Relationship" xmi:id="_oCS1MEgFEe2QI7JbPpdU3w" name="Trabalha" relationshipLink="_omsiwEgFEe2QI7JbPpdU3w _qMI2kEgFEe2QI7JbPpdU3w _pA06AEgFEe2QI7JbPpdU3w"/>
     <links xmi:type="eer:RelationshipLink" xmi:id="_lNGBUAYoEe2e4pqrJEezTw" source="_iT4_kAYoEe2e4pqrJEezTw" target="_O_nD8ENcEe21fuXTQ6KFCw"/>
     <links xmi:type="eer:InheritanceGL" xmi:id="_fdQf8AZEEe2e4pqrJEezTw"/>
@@ -103,7 +103,7 @@
     <links xmi:type="eer:RelationshipLink" xmi:id="_Lfh_UEgFEe2QI7JbPpdU3w" target="_O_nD8ENcEe21fuXTQ6KFCw"/>
     <links xmi:type="eer:RelationshipLink" xmi:id="_omsiwEgFEe2QI7JbPpdU3w" source="_PEzDYBvzEe2zKJnn-G7vAg" target="_oCS1MEgFEe2QI7JbPpdU3w" cardinality="MANY"/>
     <links xmi:type="eer:RelationshipLink" xmi:id="_pA06AEgFEe2QI7JbPpdU3w" source="_mMqwUEgFEe2QI7JbPpdU3w" target="_oCS1MEgFEe2QI7JbPpdU3w"/>
-    <links xmi:type="eer:RelationshipLink" xmi:id="_qMI2kEgFEe2QI7JbPpdU3w" source="_nE-RUEgFEe2QI7JbPpdU3w" target="_oCS1MEgFEe2QI7JbPpdU3w"/>
+    <links xmi:type="eer:RelationshipLink" xmi:id="_qMI2kEgFEe2QI7JbPpdU3w" source="_nE-RUEgFEe2QI7JbPpdU3w" target="_oCS1MEgFEe2QI7JbPpdU3w" cardinality="MANY"/>
   </eer:Schema>
   <notation:Diagram xmi:id="_GGWagAYiEe2e4pqrJEezTw" type="Eer" element="_GFiiMAYiEe2e4pqrJEezTw" name="Projeto.eer" measurementUnit="Pixel">
     <children xmi:type="notation:Node" xmi:id="_iT4_kQYoEe2e4pqrJEezTw" type="2001" element="_iT4_kAYoEe2e4pqrJEezTw">
