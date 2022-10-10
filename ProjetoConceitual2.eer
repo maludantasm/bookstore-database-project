@@ -47,7 +47,7 @@
     </nodes>
     <nodes xmi:type="eer:Entity" xmi:id="_mMqwUEgFEe2QI7JbPpdU3w" name="Armazem" AttributeLinkSource="_nTV18EgwEe2-4O6hbSpGkw _s69lwEgwEe2-4O6hbSpGkw" relationshipLink="_pA06AEgFEe2QI7JbPpdU3w"/>
     <nodes xmi:type="eer:Entity" xmi:id="_nE-RUEgFEe2QI7JbPpdU3w" name="Seção" AttributeLinkSource="_m4MLAEgwEe2-4O6hbSpGkw _tnoegEgwEe2-4O6hbSpGkw" relationshipLink="_qMI2kEgFEe2QI7JbPpdU3w"/>
-    <nodes xmi:type="eer:Relationship" xmi:id="_oCS1MEgFEe2QI7JbPpdU3w" name="Trabalha" relationshipLink="_omsiwEgFEe2QI7JbPpdU3w _qMI2kEgFEe2QI7JbPpdU3w _pA06AEgFEe2QI7JbPpdU3w"/>
+    <nodes xmi:type="eer:Relationship" xmi:id="_oCS1MEgFEe2QI7JbPpdU3w" name="Acessar" relationshipLink="_omsiwEgFEe2QI7JbPpdU3w _qMI2kEgFEe2QI7JbPpdU3w _pA06AEgFEe2QI7JbPpdU3w"/>
     <nodes xmi:type="eer:Attribute" xmi:id="_mCdc4EgwEe2-4O6hbSpGkw" name="ID" type="IDENTIFIER" AttributeLinkTarget="_nTV18EgwEe2-4O6hbSpGkw"/>
     <nodes xmi:type="eer:Attribute" xmi:id="_mdVbAEgwEe2-4O6hbSpGkw" name="ID" type="IDENTIFIER" AttributeLinkTarget="_m4MLAEgwEe2-4O6hbSpGkw"/>
     <nodes xmi:type="eer:Attribute" xmi:id="_sDfLMEgwEe2-4O6hbSpGkw" name="Nome" AttributeLinkTarget="_tnoegEgwEe2-4O6hbSpGkw"/>
