@@ -96,11 +96,11 @@ CREATE TABLE Trabalha (
     ArmazemId NUMBER NOT NULL,
     CONSTRAINT PK_Trabalha PRIMARY KEY (CPF, SecaoId),
     CONSTRAINT FK_TrabalhaFuncionario FOREIGN KEY (CPF)
-        REFERENCES Funcionario (CPF)
+        REFERENCES Funcionario (CPF),
     CONSTRAINT FK_TrabalhaSecao FOREIGN KEY (SecaoId)
         REFERENCES Secao (Id),
     CONSTRAINT FK_TrabalhaArmazem FOREIGN KEY (ArmazemId)
-        REFERENCES Armazem (Id),
+        REFERENCES Armazem (Id)
 );
 
 CREATE SEQUENCE Categoria_Seq
@@ -147,6 +147,8 @@ INSERT INTO Armazem VALUES (Armazem_Seq.NextVal, 'Vila Prudente');
 INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'A');
 INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'B');
 INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'C');
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'D');
+INSERT INTO Secao VALUES (Secao_Seq.NextVal, 'E');
 
 INSERT INTO EmbalagemPresente VALUES (EmbalagemPresente_Seq.NextVal, 1, 50.00);
 INSERT INTO EmbalagemPresente VALUES (EmbalagemPresente_Seq.NextVal, 2, 25.00);
@@ -166,15 +168,17 @@ INSERT INTO Livro VALUES ('978-85-564-8400-5', 'C# para programadores Java', 201
 INSERT INTO Livro VALUES ('978-85-897-9400-3', 'Matemática Discreta: Uma abordagem simplificada', 2021, 2);
 
 INSERT INTO Trabalha VALUES ('94161558023', 1, 1);
-INSERT INTO Trabalha VALUES ('08953368049', 1, 2);
+INSERT INTO Trabalha VALUES ('94161558023', 2, 2);
+INSERT INTO Trabalha VALUES ('94161558023', 3, 1);
+INSERT INTO Trabalha VALUES ('94161558023', 4, 1);
+INSERT INTO Trabalha VALUES ('94161558023', 5, 2);
+INSERT INTO Trabalha VALUES ('08953368049', 2, 2);
 INSERT INTO Trabalha VALUES ('06605717066', 1, 3);
-INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
-INSERT INTO Trabalha VALUES ('77391195049', 1, 2);
+INSERT INTO Trabalha VALUES ('06605717066', 2, 3);
 INSERT INTO Trabalha VALUES ('82156117020', 1, 1);
 INSERT INTO Trabalha VALUES ('82156117020', 2, 1);
 INSERT INTO Trabalha VALUES ('82156117020', 3, 1);
-INSERT INTO Trabalha VALUES ('06605717066', 2, 3);
-INSERT INTO Trabalha VALUES ('06605717066', 1, 2);
+INSERT INTO Trabalha VALUES ('77391195049', 2, 2);
 
 INSERT INTO Pedido VALUES ('20981209076', TO_TIMESTAMP('2022-07-02 16:14:23', 'YYYY-MM-DD HH24:MI:SS'));
 INSERT INTO Pedido VALUES ('64984467061', TO_TIMESTAMP('2022-07-02 16:14:23', 'YYYY-MM-DD HH24:MI:SS'));
